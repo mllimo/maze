@@ -7,7 +7,7 @@
       "inheritEnvironments": [ "msvc_x64" ],
       "buildRoot": "${projectDir}\\build\\${name}",
       "installRoot": "${projectDir}\\build\\install\\${name}",
-      "cmakeCommandArgs": "-DCMAKE_TOOLCHAIN_FILE=${projectDir}\\build\\Debug/generators/conan_toolchain.cmake",
+      "cmakeCommandArgs": "-DCMAKE_TOOLCHAIN_FILE=${projectDir}\\build\\Debug/generators/conan_toolchain.cmake -DMAZE_TESTS=ON",
       "buildCommandArgs": "",
       "ctestCommandArgs": ""
     }

@@ -50,7 +50,7 @@ void Maze::Reset() {
 
 void Maze::Set(const VectorULL& at, ObjectType element) {
    if (at.x >= _size.x && at.y >= _size.y)
-      throw std::invalid_argument("invalid maze position");
+      throw std::out_of_range("invalid maze position");
 
    if (element == ObjectType::START_POINT)
       _start_point = at;
@@ -63,7 +63,7 @@ void Maze::Set(const VectorULL& at, ObjectType element) {
 
 Maze::ObjectType Maze::Get(const VectorULL& at) const {
    if (at.x >= _size.x && at.y >= _size.y)
-      throw std::invalid_argument("invalid maze position");
+      throw std::out_of_range("invalid maze position");
 
    return _maze[Index(at)];
 }

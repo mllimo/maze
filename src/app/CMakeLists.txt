@@ -12,4 +12,4 @@ install(TARGETS Maze DESTINATION "."
         RUNTIME DESTINATION bin
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
-        )
+)

@@ -18,6 +18,14 @@ class MazeRecipe(ConanFile):
     # Sources are located in the same place as this recipe, copy them to the recipe
     exports_sources = "CMakeLists.txt", "src/*"
 
+    options = {
+        "testing": [True, False]
+    }
+
+    default_options = {
+        "testing": True
+    }
+
     def layout(self):
         cmake_layout(self)
 
@@ -38,6 +46,5 @@ class MazeRecipe(ConanFile):
 
     def requirements(self):
         self.requires("raylib/5.0")
-        
-
-    
+        if self.options.get_safe("testing", True):
+            self.requires("gtest/1.15.0")
