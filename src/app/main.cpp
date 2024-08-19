@@ -8,10 +8,22 @@
 #include <app/MazeController.hpp>
 
 int main() {
+   const int screenWidth = 800;
+   const int screenHeight = 450;
+
+   const int virtualScreenWidth = 160;
+   const int virtualScreenHeight = 90;
+
+   InitWindow(screenWidth, screenHeight, "Maze resolver");
+
    app::MazeController maze_controller;
    maze_controller.Resize({20, 20});
 
    maze::InputText input_text_load_file({600, 200}, {150, 50});
+   input_text_load_file.OnClick([&]() {
+      std::cout << "input text clicked\n";
+      input_text_load_file.SetActivation(!input_text_load_file.GetCurrentEventState().is_active);
+   });
 
    maze::Button load_from_file_button({600, 50}, {150, 50}, "Load from file");
    load_from_file_button.OnClick([&]() { 
@@ -25,14 +37,6 @@ int main() {
       maze_controller.Reset();
    });
 
-
-   const int screenWidth = 800;
-   const int screenHeight = 450;
-
-   const int virtualScreenWidth = 160;
-   const int virtualScreenHeight = 90;
-
-   InitWindow(screenWidth, screenHeight, "Maze resolver");
    std::string txt;
    maze::Maze::ObjectType selected = maze::Maze::ObjectType::WALL;
 

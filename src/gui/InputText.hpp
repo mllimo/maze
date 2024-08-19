@@ -4,6 +4,7 @@
 #include <string_view>
 
 #include <gui/Component.hpp>
+#include <gui/TextBox.hpp>
 
 namespace maze {
 class InputText : public Component {
@@ -20,7 +21,7 @@ protected:
    void UpdateImp() override;
 
   private:
-   std::string _text;
-   const unsigned MAX_LENGHT = 256;
+   TextBox _text;
+   const unsigned MAX_LENGTH = 256;
 };
 }  // namespace maze

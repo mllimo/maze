@@ -3,6 +3,7 @@
 #include <string_view>
 
 #include <gui/Component.hpp>
+#include <gui/TextBox.hpp>
 
 namespace maze {
 class Button : public Component {
@@ -14,12 +15,15 @@ class Button : public Component {
 
    const std::string_view GetText() const;
 
+   void OnClick(std::function<void(void)> callback) override;
+
    void Draw() const override;
 
   protected:
    void UpdateImp() override;
+   void SetPositionImp(const Vector2& pos) override;
 
   private:
-   std::string _text;
+   TextBox _text;
 };
 }  // namespace maze

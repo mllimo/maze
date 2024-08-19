@@ -9,6 +9,7 @@ class Component {
    struct EventData {
       bool is_pressed = false;
       bool is_released = false;
+      bool is_active = true;
    };
 
    Component() = default;
@@ -18,6 +19,8 @@ class Component {
 
    void SetPosition(const Vector2& pos);
    void SetCollider(const Vector2& collider);
+   void SetActivation(bool is_active);
+
    virtual void OnClick(std::function<void(void)> callback);
 
    Vector2 GetPosition() const;
@@ -32,8 +35,10 @@ class Component {
    virtual void Draw() const = 0;
 
   protected:
-   virtual void UpdateImp() = 0;
    std::function<void(void)> _on_click;
+
+   virtual void UpdateImp();
+   virtual void SetPositionImp(const Vector2& pos);
 
   private:
    Vector2 _position = {0.f, 0.f};
