@@ -26,7 +26,7 @@ void MazeModel::LoadFromFile(std::filesystem::path path) {
 
          switch (element_char) {
             case '0':
-               element = maze::Maze::ObjectType::ROAD;
+               element = maze::Maze::ObjectType::UNDEFINED;
                break;
             case 'W':
                element = maze::Maze::ObjectType::WALL;

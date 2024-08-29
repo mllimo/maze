@@ -27,6 +27,18 @@ void MazeController::Reset() {
    model.Reset();
 }
 
+const maze::Maze& MazeController::GetMaze() const {
+   return model.GetMaze();
+}
+
+void MazeController::SetColorOf(maze::Maze::ObjectType object, Color color) {
+   view.SetColorOf(object, color);
+}
+
+void MazeController::SetColorDefault() {
+   view.SetColorDefault();
+}
+
 std::optional<maze::VectorULL> MazeController::CellClicked(Vector2 pos) {
    view.UpdateMazeRef(&model.GetMaze());
    return view.CellClicked(pos);

@@ -4,7 +4,7 @@
 
 namespace maze {
 Maze::Maze(const VectorULL& size)
-    : _size(size), _maze(size.x * size.y, ObjectType::ROAD) {}
+    : _size(size), _maze(size.x * size.y, ObjectType::UNDEFINED) {}
 
 void Maze::Resize(const VectorULL& size) {
    size_t new_total_size = size.x * size.y;
@@ -26,7 +26,7 @@ void Maze::Resize(const VectorULL& size) {
       }
    }
 
-   std::vector<ObjectType> new_maze(size.x * size.y, ObjectType::ROAD);
+   std::vector<ObjectType> new_maze(size.x * size.y, ObjectType::UNDEFINED);
 
    for (size_t i = 0; i < size.y; ++i) {
       for (size_t j = 0; j < size.x; ++j) {
@@ -42,7 +42,7 @@ void Maze::Resize(const VectorULL& size) {
 
 void Maze::Reset() {
    for (ObjectType& element : _maze)
-      element = ObjectType::ROAD;
+      element = ObjectType::UNDEFINED;
 
    _start_point = {};
    _end_point = {};

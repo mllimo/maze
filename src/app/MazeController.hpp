@@ -17,6 +17,12 @@ class MazeController {
    void Resize(const maze::VectorULL& size);
    void Reset();
 
+   const maze::Maze& GetMaze() const;
+
+   void SetColorOf(maze::Maze::ObjectType object, Color color);
+   void SetColorDefault();
+
+
    std::optional<maze::VectorULL> CellClicked(Vector2 pos);
 
   private:

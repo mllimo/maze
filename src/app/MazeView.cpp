@@ -21,6 +21,7 @@ void MazeView::Display() const {
 
          switch (element) {
             case maze::Maze::ObjectType::UNDEFINED:
+               color = _undefined;
                break;
             case maze::Maze::ObjectType::ROAD:
                color = _road_color;
@@ -59,6 +60,34 @@ std::optional<maze::VectorULL> MazeView::CellClicked(Vector2 pos) {
    }
 
    return std::nullopt;
+}
+
+void MazeView::SetColorOf(maze::Maze::ObjectType object, Color color) {
+   switch (object) {
+      case maze::Maze::ObjectType::UNDEFINED:
+         _undefined = color;
+         break;
+      case maze::Maze::ObjectType::ROAD:
+         _road_color = color;
+         break;
+      case maze::Maze::ObjectType::WALL:
+         _wall_color = color;
+         break;
+      case maze::Maze::ObjectType::START_POINT:
+         _start_color = color;
+         break;
+      case maze::Maze::ObjectType::END_POINT:
+         _end_color = color;
+         break;
+   }
+}
+
+void MazeView::SetColorDefault() {
+   _undefined = WHITE;
+   _road_color = GRAY;
+   _wall_color = BLACK;
+   _start_color = YELLOW;
+   _end_color = RED;
 }
 
 }  // namespace app

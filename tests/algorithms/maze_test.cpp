@@ -34,7 +34,7 @@ TEST_F(MazeTest, ResizeMaze) {
 TEST_F(MazeTest, ResetMaze) {
    maze.Set({1, 1}, Maze::ObjectType::WALL);
    maze.Reset();
-   EXPECT_EQ(maze.Get({1, 1}), Maze::ObjectType::ROAD);
+   EXPECT_EQ(maze.Get({1, 1}), Maze::ObjectType::UNDEFINED);
 }
 
 TEST_F(MazeTest, SetAndGetObjectType) {

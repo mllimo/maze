@@ -1,86 +1,131 @@
-#include <iostream>
-
 #include <raylib.h>
+#include <iostream>
 
 #include <gui/Button.hpp>
 #include <gui/InputText.hpp>
 
 #include <app/MazeController.hpp>
 
-int main() {
-   const int screenWidth = 800;
-   const int screenHeight = 450;
+#include <algorithms/A.hpp>
+#include <algorithms/Resolver.hpp>
 
-   const int virtualScreenWidth = 160;
-   const int virtualScreenHeight = 90;
+void PrintSolution(app::MazeController& maze, const maze::Path& solution) {
+   for (const auto& step : solution) {
+      if (step == *maze.GetMaze().GetStartPoint() ||
+          step == *maze.GetMaze().GetEndPoint()) {
+         continue;
+      }
+      maze.AddElement(step, maze::Maze::ObjectType::ROAD);
+   }
+}
 
-   InitWindow(screenWidth, screenHeight, "Maze resolver");
-
-   app::MazeController maze_controller;
-   maze_controller.Resize({20, 20});
-
-   maze::InputText input_text_load_file({600, 200}, {150, 50});
-   input_text_load_file.OnClick([&]() {
-      std::cout << "input text clicked\n";
-      input_text_load_file.SetActivation(!input_text_load_file.GetCurrentEventState().is_active);
+void HandleButtonEvents(maze::Button& solve_button, maze::Button& load_button,
+                        maze::Button& reset_button, maze::InputText& input_text,
+                        app::MazeController& maze_controller,
+                        maze::Resolver& resolver, maze::AStar& a_star_algo) {
+   solve_button.OnClick([&]() {
+      std::cout << "button solve\n";
+      auto solution = resolver.Resolve(maze_controller.GetMaze(), &a_star_algo);
+      PrintSolution(maze_controller, solution);
    });
 
-   maze::Button load_from_file_button({600, 50}, {150, 50}, "Load from file");
-   load_from_file_button.OnClick([&]() { 
+   load_button.OnClick([&]() {
       std::cout << "button load from file\n";
-      maze_controller.LoadFromFile(input_text_load_file.GetText());
+      maze_controller.LoadFromFile(input_text.GetText());
    });
 
-   maze::Button reset_button({600, 125}, {150, 50}, "Reset");
    reset_button.OnClick([&]() {
       std::cout << "button reset\n";
       maze_controller.Reset();
    });
+}
 
-   std::string txt;
-   maze::Maze::ObjectType selected = maze::Maze::ObjectType::WALL;
+void HandleKeyboardInput(maze::Maze::ObjectType& selected_object) {
+   if (IsKeyPressed(KEY_W))
+      selected_object = maze::Maze::ObjectType::WALL;
+   if (IsKeyPressed(KEY_S))
+      selected_object = maze::Maze::ObjectType::START_POINT;
+   if (IsKeyPressed(KEY_E))
+      selected_object = maze::Maze::ObjectType::END_POINT;
+   if (IsKeyPressed(KEY_R))
+      selected_object = maze::Maze::ObjectType::ROAD;
+}
+
+void HandleMouseInput(app::MazeController& maze_controller,
+                      maze::Maze::ObjectType selected_object,
+                      std::string& text) {
+   if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+      auto clicked_pos = maze_controller.CellClicked(GetMousePosition());
+      if (clicked_pos.has_value()) {
+         std::stringstream ss;
+         ss << clicked_pos->x << " | " << clicked_pos->y;
+         text = ss.str();
+         maze_controller.AddElement(clicked_pos.value(), selected_object);
+      }
+   }
+}
+
+void UpdateGUI(maze::Button& solve_button, maze::Button& load_button,
+               maze::Button& reset_button, maze::InputText& input_text) {
+   solve_button.Update();
+   load_button.Update();
+   reset_button.Update();
+   input_text.Update();
+}
+
+void DrawGUI(app::MazeController& maze_controller, const std::string& text,
+             const maze::Button& solve_button, const maze::Button& load_button,
+             const maze::Button& reset_button,
+             const maze::InputText& input_text) {
+   ClearBackground(WHITE);
+   BeginDrawing();
+
+   maze_controller.Display();
+   DrawText(text.c_str(), 20, 20, 20, RED);
+   solve_button.Draw();
+   load_button.Draw();
+   reset_button.Draw();
+   input_text.Draw();
+
+   EndDrawing();
+}
+
+int main() {
+   const int screen_width = 800;
+   const int screen_height = 450;
+
+   InitWindow(screen_width, screen_height, "Maze resolver");
+
+   maze::Resolver resolver;
+   maze::AStar a_star_algo;
+
+   app::MazeController maze_controller;
+   maze_controller.Resize({28, 22});
+
+   maze::InputText input_text({600, 275}, {150, 50});
+   input_text.OnClick([&]() {
+      std::cout << "input text clicked\n";
+      input_text.SetActivation(!input_text.GetCurrentEventState().is_active);
+   });
+
+   maze::Button solve_button({600, 50}, {150, 50}, "Solve");
+   maze::Button load_from_file_button({600, 125}, {150, 50}, "Load from file");
+   maze::Button reset_button({600, 200}, {150, 50}, "Reset");
+
+   HandleButtonEvents(solve_button, load_from_file_button, reset_button,
+                      input_text, maze_controller, resolver, a_star_algo);
+
+   std::string text;
+   maze::Maze::ObjectType selected_object = maze::Maze::ObjectType::WALL;
 
    while (!WindowShouldClose()) {
-      // Update
-      //----------------------------------------------------------------------------------
-      if (IsKeyPressed(KEY_W))
-         selected = maze::Maze::ObjectType::WALL;
-      if (IsKeyPressed(KEY_S))
-         selected = maze::Maze::ObjectType::START_POINT;
-      if (IsKeyPressed(KEY_E))
-         selected = maze::Maze::ObjectType::END_POINT;
-      if (IsKeyPressed(KEY_R))
-         selected = maze::Maze::ObjectType::ROAD;
-
-      if (false || IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
-         auto clicked_pos = maze_controller.CellClicked(GetMousePosition());
-         if (clicked_pos.has_value()) {
-            std::stringstream ss;
-            ss << clicked_pos->x << " | " << clicked_pos->y;
-            txt = ss.str();
-            maze_controller.AddElement(clicked_pos.value(), selected);
-         }
-      }
-
-      load_from_file_button.Update();
-      reset_button.Update();
-      input_text_load_file.Update();
-
-      //----------------------------------------------------------------------------------
-      // Draw
-      //----------------------------------------------------------------------------------
-
-      ClearBackground(WHITE);
-      BeginDrawing();
-
-      maze_controller.Display();
-      DrawText(txt.c_str(), 20, 20, 20, RED);
-      load_from_file_button.Draw();
-      reset_button.Draw();
-      input_text_load_file.Draw();
-
-      EndDrawing();
-
-      //----------------------------------------------------------------------------------
+      HandleKeyboardInput(selected_object);
+      HandleMouseInput(maze_controller, selected_object, text);
+      UpdateGUI(solve_button, load_from_file_button, reset_button, input_text);
+      DrawGUI(maze_controller, text, solve_button, load_from_file_button,
+              reset_button, input_text);
    }
+
+   CloseWindow();
+   return 0;
 }

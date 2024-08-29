@@ -12,4 +12,12 @@ Path::const_iterator Path::cbegin() const {
 Path::const_iterator Path::cend() const {
    return _steps.cend();
 }
+
+Path::const_iterator Path::begin() const {
+   return _steps.begin();
+}
+
+Path::const_iterator Path::end() const {
+   return _steps.end();
+}
 }  // namespace maze
