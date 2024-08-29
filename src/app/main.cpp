@@ -48,7 +48,7 @@ void HandleKeyboardInput(maze::Maze::ObjectType& selected_object) {
    if (IsKeyPressed(KEY_E))
       selected_object = maze::Maze::ObjectType::END_POINT;
    if (IsKeyPressed(KEY_R))
-      selected_object = maze::Maze::ObjectType::ROAD;
+      selected_object = maze::Maze::ObjectType::UNDEFINED;
 }
 
 void HandleMouseInput(app::MazeController& maze_controller,
